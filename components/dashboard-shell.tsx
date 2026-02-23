@@ -55,7 +55,6 @@ const navItems: Record<UserRole, NavItem[]> = {
     { title: "Water Monitoring", href: "/dashboard/water-levels", icon: Droplets, badge: "Live" },
     { title: "Drought Prediction", href: "/dashboard/drought-prediction", icon: CloudRain },
     { title: "Tanker Management", href: "/dashboard/tanker-order", icon: Truck, badge: "8" },
-    { title: "Analytics", href: "/dashboard/government#analytics", icon: BarChart3 },
     { title: "Alerts", href: "/dashboard/government#alerts", icon: AlertTriangle, badge: "3" },
   ],
   dealer: [

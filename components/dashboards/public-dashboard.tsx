@@ -11,15 +11,14 @@ import { alerts, districts, reservoirs } from "@/lib/mock-data"
 import {
   Droplets,
   CloudRain,
-  Truck,
   ThermometerSun,
   Wind,
   ArrowRight,
   MapPin,
+  Truck,
 } from "lucide-react"
 
 export function PublicDashboard() {
-  const criticalDistricts = districts.filter((d) => d.riskLevel === "critical" || d.riskLevel === "high")
   const publicAlerts = alerts.slice(0, 3)
 
   return (
@@ -27,13 +26,15 @@ export function PublicDashboard() {
       {/* Page header */}
       <div className="space-y-1">
         <h1 className="text-2xl font-bold tracking-tight">Water Status Dashboard</h1>
-        <p className="text-sm text-muted-foreground">Real-time water levels, drought alerts, and tanker ordering for your area</p>
+        <p className="text-sm text-muted-foreground">
+          Real-time groundwater levels, drought alerts, and tanker ordering for your area
+        </p>
       </div>
 
       {/* Quick stats */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <StatCard
-          title="Avg Water Level"
+          title="Ground Water Level"
           value="47.2%"
           subtitle="Across monitored districts"
           icon={Droplets}
@@ -53,12 +54,6 @@ export function PublicDashboard() {
           icon={ThermometerSun}
           variant="warning"
         />
-        <StatCard
-          title="Tanker Available"
-          value="24"
-          subtitle="In your district"
-          icon={Truck}
-        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">
@@ -66,12 +61,12 @@ export function PublicDashboard() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <div>
-              <CardTitle className="text-base">District Water Levels</CardTitle>
+              <CardTitle className="text-base">District Ground Water Levels</CardTitle>
               <CardDescription>Real-time groundwater monitoring</CardDescription>
             </div>
             <Link href="/dashboard/water-levels">
               <Button variant="ghost" size="sm" className="text-xs">
-                View All <ArrowRight className="ml-1 h-3 w-3" />
+                View Map <ArrowRight className="ml-1 h-3 w-3" />
               </Button>
             </Link>
           </CardHeader>
@@ -84,24 +79,12 @@ export function PublicDashboard() {
                     <span className="truncate text-sm font-medium">{district.name}</span>
                   </div>
                   <div className="flex-1">
-                    <Progress
-                      value={district.waterLevel}
-                      className="h-2"
-                    />
+                    <Progress value={district.waterLevel} className="h-2" />
                   </div>
-                  <span className="w-10 text-right text-sm font-mono font-medium">{district.waterLevel}%</span>
-                  <Badge
-                    variant={
-                      district.riskLevel === "critical"
-                        ? "destructive"
-                        : district.riskLevel === "high"
-                          ? "destructive"
-                          : district.riskLevel === "moderate"
-                            ? "secondary"
-                            : "outline"
-                    }
-                    className="w-16 justify-center text-[10px]"
-                  >
+                  <span className="w-10 text-right text-sm font-mono font-medium">
+                    {district.waterLevel}%
+                  </span>
+                  <Badge className="w-16 justify-center text-[10px]">
                     {district.riskLevel}
                   </Badge>
                 </div>
@@ -113,12 +96,7 @@ export function PublicDashboard() {
         {/* Alerts */}
         <Card>
           <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Active Alerts</CardTitle>
-              <Badge variant="destructive" className="text-[10px]">
-                {publicAlerts.filter((a) => a.type === "critical").length} Critical
-              </Badge>
-            </div>
+            <CardTitle className="text-base">Drought Alerts</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
@@ -132,71 +110,72 @@ export function PublicDashboard() {
                 />
               ))}
             </div>
+
+            <Link href="/dashboard/drought-prediction">
+              <Button variant="outline" className="mt-4 w-full">
+                View Drought Map
+              </Button>
+            </Link>
           </CardContent>
         </Card>
       </div>
 
-      {/* Reservoir status & Quick actions */}
-      <div className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Major Reservoir Status</CardTitle>
-            <CardDescription>Current storage levels for key reservoirs</CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid gap-4 sm:grid-cols-2">
-              {reservoirs.slice(0, 4).map((reservoir) => {
-                const percent = Math.round((reservoir.current / reservoir.capacity) * 100)
-                return (
-                  <div key={reservoir.name} className="rounded-lg border bg-secondary/30 p-3.5 space-y-2">
-                    <div className="flex items-center justify-between">
-                      <p className="text-sm font-semibold">{reservoir.name}</p>
-                      <Badge variant="outline" className="text-[10px]">{reservoir.state}</Badge>
-                    </div>
-                    <Progress value={percent} className="h-2" />
-                    <div className="flex justify-between text-xs text-muted-foreground">
-                      <span>{reservoir.current} MCM</span>
-                      <span className="font-medium">{percent}%</span>
-                    </div>
+      {/* Reservoir status */}
+      <Card>
+        <CardHeader className="pb-2">
+          <CardTitle className="text-base">Major Reservoir Status</CardTitle>
+          <CardDescription>Current storage levels</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {reservoirs.slice(0, 4).map((reservoir) => {
+              const percent = Math.round((reservoir.current / reservoir.capacity) * 100)
+              return (
+                <div key={reservoir.name} className="rounded-lg border bg-secondary/30 p-3.5 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-semibold">{reservoir.name}</p>
+                    <Badge variant="outline" className="text-[10px]">{reservoir.state}</Badge>
                   </div>
-                )
-              })}
-            </div>
-          </CardContent>
-        </Card>
+                  <Progress value={percent} className="h-2" />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>{reservoir.current} MCM</span>
+                    <span className="font-medium">{percent}%</span>
+                  </div>
+                </div>
+              )
+            })}
+          </div>
+        </CardContent>
+      </Card>
 
-        {/* Quick actions */}
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-base">Quick Actions</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-3">
-            <Link href="/dashboard/tanker-order" className="block">
-              <Button className="w-full justify-start" size="lg">
-                <Truck className="mr-3 h-4 w-4" />
-                Order Water Tanker
-              </Button>
-            </Link>
-            <Link href="/dashboard/water-levels" className="block">
-              <Button variant="outline" className="w-full justify-start" size="lg">
-                <Droplets className="mr-3 h-4 w-4" />
-                Check Water Levels
-              </Button>
-            </Link>
-            <Link href="/dashboard/drought-prediction" className="block">
-              <Button variant="outline" className="w-full justify-start" size="lg">
-                <CloudRain className="mr-3 h-4 w-4" />
-                View Drought Forecast
-              </Button>
-            </Link>
-            <div className="rounded-lg border border-dashed p-3 text-center">
-              <Wind className="mx-auto mb-1 h-5 w-5 text-muted-foreground" />
-              <p className="text-xs text-muted-foreground">Weather: Partly cloudy, 38.5 C</p>
-              <p className="text-[11px] text-muted-foreground/70">Humidity: 32% | Wind: 12 km/h</p>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+      {/* Tanker Order */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-base">Order Water Tanker</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Link href="/dashboard/tanker-order">
+            <Button size="lg" className="w-full">
+              <Truck className="mr-2 h-4 w-4" />
+              Request Tanker
+            </Button>
+          </Link>
+
+          <div className="rounded-lg border bg-secondary/20 p-3 text-sm">
+            <p><strong>Estimated Arrival:</strong> 45 minutes</p>
+            <p><strong>Transaction ID:</strong> NM-2024-001</p>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Weather */}
+      <Card>
+        <CardContent className="p-4 text-center">
+          <Wind className="mx-auto mb-1 h-5 w-5 text-muted-foreground" />
+          <p className="text-xs text-muted-foreground">Weather: Partly cloudy, 38.5 C</p>
+          <p className="text-[11px] text-muted-foreground/70">Humidity: 32% | Wind: 12 km/h</p>
+        </CardContent>
+      </Card>
     </div>
   )
 }

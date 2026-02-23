@@ -53,7 +53,46 @@ export function DroughtPredictionPage() {
         <StatCard title="Avg Temperature" value="38.5 C" icon={Thermometer} subtitle="Above normal by 2.3 C" />
         <StatCard title="Monsoon Deficit" value="12%" icon={Wind} subtitle="Below 30-year average" />
       </div>
+      {/* 🌍 DROUGHT RISK HEATMAP MAP */}
+<Card>
+  <CardHeader>
+    <CardTitle className="text-base">Drought Risk Heatmap (India)</CardTitle>
+    <CardDescription>
+      AI-predicted drought severity visualization across regions
+    </CardDescription>
+  </CardHeader>
 
+  <CardContent>
+    <div className="h-[420px] rounded-lg overflow-hidden border relative">
+
+      {/* Map */}
+      <iframe
+        src="https://www.openstreetmap.org/export/embed.html"
+        className="absolute inset-0 w-full h-full"
+      />
+
+      {/* Heat overlay */}
+      <div className="absolute inset-0 bg-gradient-to-tr from-red-600/40 via-orange-400/30 to-blue-400/30 pointer-events-none" />
+
+      {/* Legend */}
+      <div className="absolute bottom-3 left-3 bg-background/80 backdrop-blur rounded-md px-3 py-2 text-xs space-y-1 border">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-red-600 rounded" /> Extreme
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-orange-400 rounded" /> Severe
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-yellow-400 rounded" /> Moderate
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 bg-blue-400 rounded" /> Low Risk
+        </div>
+      </div>
+
+    </div>
+  </CardContent>
+</Card>
       {/* Prediction cards */}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {droughtPredictions.slice(0, 4).map((pred) => {

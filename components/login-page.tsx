@@ -78,7 +78,7 @@ export function LoginPage() {
         </div>
 
         <p className="text-xs text-primary-foreground/40">
-          Government of India Initiative &middot; Ministry of Jal Shakti
+          Neer Manthan by Sirius Seekers
         </p>
       </div>
 

@@ -90,7 +90,7 @@ export function GovernmentDashboard() {
         <StatCard title="Districts Monitored" value="750" icon={Map} subtitle="All India" />
         <StatCard title="Critical Zones" value={criticalCount + highCount} icon={AlertTriangle} variant="destructive" subtitle={`${criticalCount} critical, ${highCount} high`} />
         <StatCard title="Active Tankers" value="342" icon={Truck} variant="primary" subtitle="Across 18 states" />
-        <StatCard title="Pending Orders" value={pendingOrders} icon={Zap} variant="warning" subtitle="Awaiting dispatch" />
+        
         <StatCard title="Population Affected" value="2.8M" icon={Users} subtitle="In drought zones" />
       </div>
 
@@ -99,7 +99,7 @@ export function GovernmentDashboard() {
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="predictions">Predictions</TabsTrigger>
-          <TabsTrigger value="tankers">Tanker Mgmt</TabsTrigger>
+          
           <TabsTrigger value="alerts">Alerts</TabsTrigger>
         </TabsList>
 
